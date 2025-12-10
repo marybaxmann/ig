@@ -1,7 +1,6 @@
 import * as React from "react";
-// CORREGIDO: Eliminamos @1.1.2
+// CORREGIDO: Eliminadas las versiones
 import { Slot } from "@radix-ui/react-slot";
-// CORREGIDO: Eliminamos @0.7.1
 import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "./utils";
@@ -39,7 +38,7 @@ function Badge({
   return (
     <Comp
       data-slot="badge"
-      className={cn(badgeVariants({ variant, className }))}
+      className={cn(badgeVariants({ variant }), className)}
       {...props}
     />
   );
