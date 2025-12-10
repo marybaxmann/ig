@@ -1,7 +1,10 @@
 import * as React from "react";
-import * as NavigationMenuPrimitive from "@radix-ui/react-navigation-menu@1.2.5";
-import { cva } from "class-variance-authority@0.7.1";
-import { ChevronDownIcon } from "lucide-react@0.487.0";
+// CORREGIDO: Eliminamos @1.2.5
+import * as NavigationMenuPrimitive from "@radix-ui/react-navigation-menu";
+// CORREGIDO: Eliminamos @0.7.1
+import { cva } from "class-variance-authority";
+// CORREGIDO: Eliminamos @0.487.0
+import { ChevronDownIcon } from "lucide-react";
 
 import { cn } from "./utils";
 
@@ -129,7 +132,7 @@ function NavigationMenuLink({
     <NavigationMenuPrimitive.Link
       data-slot="navigation-menu-link"
       className={cn(
-        "data-[active=true]:focus:bg-accent data-[active=true]:hover:bg-accent data-[active=true]:bg-accent/50 data-[active=true]:text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus-visible:ring-ring/50 [&_svg:not([class*='text-'])]:text-muted-foreground flex flex-col gap-1 rounded-sm p-2 text-sm transition-all outline-none focus-visible:ring-[3px] focus-visible:outline-1 [&_svg:not([class*='size-'])]:size-4",
+        "data-[active=true]:focus:bg-accent data-[active=true]:hover:bg-accent data-[active=true]:bg-accent/50 data-[active=true]:text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus-visible:ring-ring/50 [&_svg:not([class*='text'])]:text-muted-foreground flex flex-col gap-1 rounded-sm p-2 text-sm transition-all outline-none focus-visible:ring-[3px] focus-visible:outline-1 [&_svg:not([class*='size'])]:size-4",
         className,
       )}
       {...props}

@@ -1,9 +1,10 @@
 import * as React from "react";
+// CORREGIDO: Eliminamos @0.487.0
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
   MoreHorizontalIcon,
-} from "lucide-react@0.487.0";
+} from "lucide-react";
 
 import { cn } from "./utils";
 import { Button, buttonVariants } from "./button";
