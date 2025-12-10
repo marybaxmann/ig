@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { InstagramStory } from './components/InstagramStory';
 
 export default function App() {
-  const [username, setUsername] = useState('_itstami_');
-  const [time, setTime] = useState('26 min');
+  const [username, setUsername] = useState('username');
+  const [time, setTime] = useState('x min');
   const [profileImg, setProfileImg] = useState<string | null>(null);
   const [storyImg, setStoryImg] = useState<string | null>(null);
   
@@ -49,7 +49,18 @@ export default function App() {
                   min="1" 
                   max="10" 
                   value={totalStories} 
-                  onChange={(e) => setTotalStories(Number(e.target.value))}
+                  onChange={(e) => {
+                    const value = Number(e.target.value);
+                    let newTotal = isNaN(value) || value < 1 ? 1 : value;
+                    if (newTotal > 10) newTotal = 10;
+                    
+                    setTotalStories(newTotal);
+
+                    // Ajustar activeStory si el nuevo total es menor
+                    if (activeStory > newTotal) {
+                        setActiveStory(newTotal);
+                    }
+                  }}
                   className="w-full p-1 rounded bg-gray-700 border border-gray-500 text-center"
                 />
              </div>
@@ -60,7 +71,13 @@ export default function App() {
                   min="1" 
                   max={totalStories} 
                   value={activeStory} 
-                  onChange={(e) => setActiveStory(Number(e.target.value))}
+                  onChange={(e) => {
+                    const value = Number(e.target.value);
+                    let newActive = isNaN(value) || value < 1 ? 1 : value;
+                    if (newActive > totalStories) newActive = totalStories;
+
+                    setActiveStory(newActive);
+                  }}
                   className="w-full p-1 rounded bg-gray-700 border border-gray-500 text-center"
                 />
              </div>
@@ -90,8 +107,8 @@ export default function App() {
             time={time}
             profileImg={profileImg}
             storyImg={storyImg}
-            totalStories={totalStories} // <--- NUEVO
-            activeStory={activeStory}   // <--- NUEVO
+            totalStories={totalStories} 
+            activeStory={activeStory}   
          />
 
          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-[130px] h-[5px] bg-white/40 rounded-full z-50 pointer-events-none"></div>
