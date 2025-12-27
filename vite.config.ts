@@ -8,4 +8,12 @@ export default defineConfig({
       "@": "/src",
     },
   },
+  build: {
+    cssCodeSplit: false,
+    minify: 'terser',
+    sourcemap: false,
+  },
+  css: {
+    postcss: './postcss.config.js',
+  },
 })
