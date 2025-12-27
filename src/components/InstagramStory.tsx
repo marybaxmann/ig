@@ -76,7 +76,7 @@ export function InstagramStory({ username, time, profileImg, storyImg, totalStor
       </div>
 
       {/* FOOTER */}
-      <div className="absolute bottom-0 w-full px-4 pb-4 z-20 flex items-center gap-4">
+      <div className="absolute bottom-0 w-full px-4 pb-12 z-20 flex items-center gap-4">
         <div className="flex-1 h-[50px]">
           <input type="text" placeholder="Responde a esta historia..." className="w-full h-full bg-transparent border-[1px] border-white/10 rounded-full px-6 text-white placeholder-white/80 text-[15px] outline-none" />
         </div>
