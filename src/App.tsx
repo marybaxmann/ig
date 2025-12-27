@@ -1,12 +1,15 @@
 import { useState, useRef } from 'react';
 import html2canvas from 'html2canvas';
 import { InstagramStory } from './components/InstagramStory';
+import { ImageCropper } from './components/ImageCropper';
 
 export default function App() {
   const [username, setUsername] = useState('username');
   const [time, setTime] = useState('x min');
   const [profileImg, setProfileImg] = useState<string | null>(null);
   const [storyImg, setStoryImg] = useState<string | null>(null);
+  const [showCropper, setShowCropper] = useState(false);
+  const [tempImageForCrop, setTempImageForCrop] = useState<string | null>(null);
   
   // --- NUEVO: Estados para las barras de historia ---
   const [totalStories, setTotalStories] = useState(3); // Cantidad total de rayitas
@@ -14,11 +17,21 @@ export default function App() {
   
   const storyContentRef = useRef<HTMLDivElement>(null);
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>, setter: (val: string) => void) => {
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>, type: 'profile' | 'story') => {
     if (e.target.files && e.target.files[0]) {
       const url = URL.createObjectURL(e.target.files[0]);
-      setter(url);
+      
+      if (type === 'profile') {
+        setTempImageForCrop(url);
+        setShowCropper(true);
+      } else {
+        setStoryImg(url);
+      }
     }
+  };
+
+  const handleCropComplete = (croppedImage: string) => {
+    setProfileImg(croppedImage);
   };
   
   const downloadScreenshot = async () => {
@@ -135,12 +148,12 @@ export default function App() {
           {/* Inputs de archivos (igual que antes) */}
           <div>
             <label className="block text-sm mb-1 text-gray-300">Foto de Perfil:</label>
-            <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, setProfileImg)}
+            <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, 'profile')}
               className="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-pink-600 file:text-white hover:file:bg-pink-700"/>
           </div>
           <div>
             <label className="block text-sm mb-1 text-gray-300">Fondo de Historia:</label>
-            <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, setStoryImg)}
+            <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, 'story')}
               className="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-pink-600 file:text-white hover:file:bg-pink-700"/>
           </div>
         </div>
@@ -176,6 +189,14 @@ export default function App() {
 
          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-[130px] h-[5px] bg-white/40 rounded-full z-50 pointer-events-none"></div>
       </div>
+
+      {showCropper && tempImageForCrop && (
+        <ImageCropper
+          imageSrc={tempImageForCrop}
+          onCropComplete={handleCropComplete}
+          onClose={() => setShowCropper(false)}
+        />
+      )}
     </div>
   );
 }
