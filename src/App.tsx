@@ -109,13 +109,10 @@ export default function App() {
                 <label className="block text-xs mb-1 text-pink-300 font-bold">TOTAL HISTORIAS:</label>
                 <input 
                   type="number" 
-                  min="1" 
-                  max="10" 
                   value={totalStories} 
                   onChange={(e) => {
                     const value = Number(e.target.value);
-                    let newTotal = isNaN(value) || value < 1 ? 1 : value;
-                    if (newTotal > 10) newTotal = 10;
+                    let newTotal = isNaN(value) || value < 1 ? 1 : value > 10 ? 10 : value;
                     
                     setTotalStories(newTotal);
 
