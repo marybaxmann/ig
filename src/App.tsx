@@ -10,10 +10,11 @@ export default function App() {
   const [storyImg, setStoryImg] = useState<string | null>(null);
   const [showCropper, setShowCropper] = useState(false);
   const [tempImageForCrop, setTempImageForCrop] = useState<string | null>(null);
+  const [isRepost, setIsRepost] = useState(false);
   
-  // --- NUEVO: Estados para las barras de historia ---
-  const [totalStories, setTotalStories] = useState(3); // Cantidad total de rayitas
-  const [activeStory, setActiveStory] = useState(1);   // Cuál está activa (la 1, la 2, etc)
+  // --- Estados para las barras de historia ---
+  const [totalStories, setTotalStories] = useState(3);
+  const [activeStory, setActiveStory] = useState(1);
   
   const storyContentRef = useRef<HTMLDivElement>(null);
 
@@ -145,6 +146,16 @@ export default function App() {
              </div>
           </div>
 
+          {/* Botón para activar Sticker de Repost */}
+          <button
+            onClick={() => setIsRepost(!isRepost)}
+            className={`w-full py-2 px-4 rounded-lg font-semibold text-white transition ${
+              isRepost ? 'bg-pink-600 hover:bg-pink-700' : 'bg-gray-600 hover:bg-gray-700'
+            }`}
+          >
+            {isRepost ? '✓ Sticker de Repost' : 'Sticker de Repost'}
+          </button>
+
           {/* Inputs de archivos (igual que antes) */}
           <div>
             <label className="block text-sm mb-1 text-gray-300">Foto de Perfil:</label>
@@ -184,7 +195,8 @@ export default function App() {
             storyImg={storyImg}
             totalStories={totalStories} 
             activeStory={activeStory}
-            contentRef={storyContentRef}   
+            contentRef={storyContentRef}
+            isRepost={isRepost}
          />
 
          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-[130px] h-[5px] bg-white/40 rounded-full z-50 pointer-events-none"></div>
