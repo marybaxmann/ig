@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import html2canvas from 'html2canvas';
 import { InstagramStory } from './components/InstagramStory';
 
 export default function App() {
@@ -10,11 +11,59 @@ export default function App() {
   // --- NUEVO: Estados para las barras de historia ---
   const [totalStories, setTotalStories] = useState(3); // Cantidad total de rayitas
   const [activeStory, setActiveStory] = useState(1);   // Cuál está activa (la 1, la 2, etc)
+  
+  const storyContentRef = useRef<HTMLDivElement>(null);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>, setter: (val: string) => void) => {
     if (e.target.files && e.target.files[0]) {
       const url = URL.createObjectURL(e.target.files[0]);
       setter(url);
+    }
+  };
+  
+  const downloadScreenshot = async () => {
+    if (!storyContentRef.current) return;
+    
+    try {
+      const element = storyContentRef.current;
+      
+      // Esperar a que todas las imágenes carguen
+      const images = element.querySelectorAll('img');
+      await Promise.all(
+        Array.from(images).map(
+          img =>
+            new Promise<void>((resolve) => {
+              if (img.complete) {
+                resolve();
+              } else {
+                img.onload = () => resolve();
+                img.onerror = () => resolve();
+              }
+            })
+        )
+      );
+      
+      // Pequeño delay para asegurar que el DOM esté listo
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      const canvas = await html2canvas(element, {
+        backgroundColor: '#000000',
+        scale: window.devicePixelRatio * 3,
+        useCORS: true,
+        allowTaint: true,
+        logging: false,
+        imageTimeout: 0,
+        removeContainer: false,
+      });
+      
+      const link = document.createElement('a');
+      link.href = canvas.toDataURL('image/png');
+      link.download = `instagram-story-${Date.now()}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error('Error descargando imagen:', error);
     }
   };
 
@@ -95,6 +144,19 @@ export default function App() {
               className="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-pink-600 file:text-white hover:file:bg-pink-700"/>
           </div>
         </div>
+
+        {/* Botón de descarga */}
+        <button
+          onClick={downloadScreenshot}
+          className="w-full mt-6 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-bold py-3 px-4 rounded-lg transition-all duration-200 active:scale-95 flex items-center justify-center gap-2"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          Descargar Screenshot
+        </button>
       </div>
 
       {/* EL IPHONE */}
@@ -108,7 +170,8 @@ export default function App() {
             profileImg={profileImg}
             storyImg={storyImg}
             totalStories={totalStories} 
-            activeStory={activeStory}   
+            activeStory={activeStory}
+            contentRef={storyContentRef}   
          />
 
          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-[130px] h-[5px] bg-white/40 rounded-full z-50 pointer-events-none"></div>

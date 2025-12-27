@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, RefObject } from 'react';
 
 // Agregamos las nuevas props a la interfaz
 interface InstagramStoryProps {
@@ -8,10 +8,10 @@ interface InstagramStoryProps {
   storyImg: string | null;
   totalStories: number; // NUEVO
   activeStory: number;  // NUEVO
+  contentRef?: RefObject<HTMLDivElement>; // NUEVO: ref para captura
 }
 
 const Icons = {
-  Repost: () => (<img src="/repost.jpg" alt="Repost" className="w-[18px] h-[18px] object-contain" />),
   Close: () => <svg aria-label="Cerrar" color="white" fill="white" height="24" viewBox="0 0 24 24" width="24"><polyline fill="none" points="20.643 3.357 12 12 3.353 20.647" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="3"></polyline><line fill="none" x1="20.649" x2="3.354" y1="20.649" y2="3.354" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="3"></line></svg>,
   Dots: () => <svg aria-label="Más" color="white" fill="white" height="24" viewBox="0 0 24 24" width="24"><circle cx="12" cy="12" r="1.5"></circle><circle cx="6" cy="12" r="1.5"></circle><circle cx="18" cy="12" r="1.5"></circle></svg>,
   Heart: ({ filled }: { filled: boolean }) => filled ? 
@@ -19,7 +19,7 @@ const Icons = {
     <svg aria-label="Me gusta" color="white" fill="white" height="28" viewBox="0 0 24 24" width="28"><path d="M16.792 3.904A4.989 4.989 0 0 1 21.5 9.122c0 3.072-2.652 4.959-5.197 7.222-2.512 2.243-3.865 3.469-4.303 3.752-.477-.309-2.143-1.823-4.303-3.752C5.141 14.072 2.5 12.167 2.5 9.122a4.989 4.989 0 0 1 4.708-5.218 4.21 4.21 0 0 1 3.675 1.941c.84 1.175.98 1.763 1.12 1.763s.278-.588 1.11-1.766a4.17 4.17 0 0 1 3.679-1.938m0-2a6.04 6.04 0 0 0-4.797 2.127 6.052 6.052 0 0 0-4.787-2.127A6.985 6.985 0 0 0 .5 9.122c0 3.61 2.55 5.827 5.015 7.97.283.246.569.494.853.747l1.027.918a44.998 44.998 0 0 0 3.518 3.018 2 2 0 0 0 2.174 0 45.263 45.263 0 0 0 3.626-3.115l.922-.824c.293-.26.59-.519.885-.774 2.334-2.025 4.98-4.32 4.98-7.94a6.985 6.985 0 0 0-6.708-7.218Z"></path></svg>
 };
 
-export function InstagramStory({ username, time, profileImg, storyImg, totalStories, activeStory }: InstagramStoryProps) {
+export function InstagramStory({ username, time, profileImg, storyImg, totalStories, activeStory, contentRef }: InstagramStoryProps) {
   const [isLiked, setIsLiked] = useState(false);
   const defaultAvatar = "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80";
   const defaultBackground = "/historia.jpg";
@@ -27,7 +27,7 @@ export function InstagramStory({ username, time, profileImg, storyImg, totalStor
   const currentBackground = storyImg || defaultBackground;
 
   return (
-    <div className="relative w-full h-full bg-black font-sans text-white select-none overflow-hidden">
+    <div ref={contentRef} className="relative w-full h-full bg-black font-sans text-white select-none overflow-hidden">
       
       {/* FONDO */}
       <div className="absolute inset-0 bg-black flex items-center justify-center">
@@ -61,7 +61,7 @@ export function InstagramStory({ username, time, profileImg, storyImg, totalStor
              <div className="w-6 h-6 rounded-full overflow-hidden">
                <img src={currentAvatar} className="w-full h-full object-cover" alt="u" />
              </div>
-             <div className="flex flex-col justify-center h-8">
+             <div className="flex flex-col justify-center h-8 -mt-2">
                 <div className="flex items-baseline gap-2">
                    <span className="font-semibold text-[13px] drop-shadow-md">{username}</span>
                    <span className="text-white/70 text-[11px] font-light drop-shadow-md">{time}</span>
@@ -73,16 +73,6 @@ export function InstagramStory({ username, time, profileImg, storyImg, totalStor
              <Icons.Close />
           </div>
         </div>
-      </div>
-
-      {/* STICKER */}
-      <div className="absolute inset-x-0 bottom-40 z-20 flex justify-center">
-         <button className="bg-white text-black h-[38px] px-4 rounded-full flex items-center justify-center gap-2 shadow-sm active:scale-95 transition-transform cursor-default">
-            <div className="flex items-center justify-center"><Icons.Repost /></div>
-            <span className="text-[14px] font-bold tracking-normal leading-none mt-[1px] antialiased" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif' }}>
-               Agregar a tu historia
-            </span>
-         </button>
       </div>
 
       {/* FOOTER */}
