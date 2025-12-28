@@ -3,5 +3,5 @@
   import App from "./App.tsx";
   import "./index.css";
 
-  createRoot(document.getElementById("root")!).render(<App />);
+  // Force redeploy - v2  createRoot(document.getElementById("root")!).render(<App />);
   
